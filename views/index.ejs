@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="styles/main.css">
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="box">
+        <% if (content && content.sys) { %>
+            <h2>Information</h2>
+            <p>Country: <%= content.sys.country %></p>
+            <p>Place: <%= content.name %></p>
+            <p>Sunrise: <%= new Date(content.sys.sunrise * 1000).toLocaleTimeString() %></p>
+            <p>Sunset: <%= new Date(content.sys.sunset * 1000).toLocaleTimeString() %></p>
+        <% } %>
+        <% if (content && content.weather && content.weather[0]) { %>
+          <h2>Weather Conditions</h2>
+          <img src="https://openweathermap.org/img/wn/<%= content.weather[0].icon %>@2x.png" alt="Weather Icon">
+            <p>Description: <%= content.weather[0].description %></p>
+        <% } %>
+        <% if (content && content.main) { %>
+            <h2>Main Weather Data</h2>
+            <p>Temperature: <%= content.main.temp %>°C</p>
+            <p>Feels Like: <%= content.main.feels_like %>°C</p>
+            <p>Minimum Temperature: <%= content.main.temp_min %>°C</p>
+            <p>Maximum Temperature: <%= content.main.temp_max %>°C</p>
+            <p>Pressure: <%= content.main.pressure %> hPa</p>
+            <p>Humidity: <%= content.main.humidity %>%</p>
+        <% } %>
+        <% if (content && content.wind) { %>
+            <h2>Wind Data</h2>
+            <p>Wind Speed: <%= content.wind.speed %> m/s</p>
+        <% } %>
+        <% if (!(content && content.sys) && !(content && content.weather && content.weather[0]) && !(content && content.main) && !(content && content.wind)) { %>
+          <p id="weatherMessage">Click the button to get current weather data in your location.</p>
+        <% } %>
+        
+        
+        <!-- Hidden submission form -->
+        <form id="locationForm" action="/weather" method="post">
+            <input type="hidden" name="latitude" id="latitude" value="">
+            <input type="hidden" name="longitude" id="longitude" value="">
+            <button type="submit">Get Weather</button>
+        </form>
+    </div>
+</div>
+
+  <script>
+
+    // Add an event listener for the DOMContentLoaded event
+    window.addEventListener('DOMContentLoaded', getLocation);
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+
+    function showPosition(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+
+      // Set the hidden input field values
+      document.getElementById("latitude").value = latitude;
+      document.getElementById("longitude").value = longitude;
+    }
+  </script>
+ <footer>
+  Made with ❤️ by Burak
+</footer>
+</body>
+
+</html>
